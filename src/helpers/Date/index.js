@@ -13,4 +13,5 @@ export const MONTHS = {
   12: "décembre",
 };
 
-export const getMonth = (date) => MONTHS[date.getMonth()];
+export const getMonth = (date) => MONTHS[date.getMonth() + 1]; // ici on rajoute 1 car le getMonth renvoie un entier compris entre 0 (janvier) et 11 (decembre) // 
+

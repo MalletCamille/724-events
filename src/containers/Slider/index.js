@@ -7,15 +7,23 @@ import "./style.scss";
 const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
+  // Tri des événements par date (focus)
   const byDateDesc = data?.focus.sort((evtA, evtB) =>
     new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
   );
+  
+  // Fonction pour passer à la prochaine carte après un délai
   const nextCard = () => {
-    setTimeout(() => setIndex((index + 1) % byDateDesc.length), 5000); // ici je rajoute l'opréteur modulo pour rester dans la boucle du tableau byDateDesc ainsi on a supprimé la slide blanche //
+    // Utilisation de setTimeout pour décaler le changement d'index
+    // Utilisation de la fonction setIndex avec une fonction callback
+    setTimeout(() => setIndex((index + 1) % byDateDesc.length), 5000);
   };
+  
+  // Utilisation de useEffect pour exécuter nextCard après chaque rendu du composant
   useEffect(() => {
     nextCard();
   });
+
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
