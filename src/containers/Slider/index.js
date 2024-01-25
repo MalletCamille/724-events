@@ -16,7 +16,8 @@ const Slider = () => {
   const nextCard = () => {
     // Utilisation de setTimeout pour décaler le changement d'index
     // Utilisation de la fonction setIndex avec une fonction callback
-    setTimeout(() => setIndex((index + 1) % byDateDesc.length), 5000);
+    setTimeout(() => setIndex((index + 1) % byDateDesc.length), 5000); // ici j'ai rajouté l'opérateur modulo pour rester dans le tableau byDateDesc. 
+    // Ca crée une loop et ça supprime le state 3 et donc la slide blanche //  
   };
   
   // Utilisation de useEffect pour exécuter nextCard après chaque rendu du composant

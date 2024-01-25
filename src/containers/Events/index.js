@@ -18,11 +18,16 @@ const EventList = () => {
       ? data?.events
       : data?.events) || []
   ).filter((event, index) => {
-    if (
-      (currentPage - 1) * PER_PAGE <= index &&
-      PER_PAGE * currentPage > index
-    ) {
-      return true;
+    const isSameType = type === event.type;  
+    const pagination = (currentPage - 1) * PER_PAGE <= index && PER_PAGE * currentPage > index;
+    if (pagination) { 
+      if (type === null) {
+        return true;
+      }
+      if (isSameType) { 
+        return true; 
+      }
+      return false;
     }
     return false;
   });

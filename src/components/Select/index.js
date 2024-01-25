@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { useState } from "react";
+import { useState, act } from "react";
 import PropTypes from "prop-types";
 
 import "./style.scss";
@@ -15,11 +15,24 @@ const Select = ({
 }) => {
   const [value, setValue] = useState();
   const [collapsed, setCollapsed] = useState(true);
-  const changeValue = (newValue) => {
-    onChange();
-    setValue(newValue);
-    setCollapsed(newValue);
+
+  // Fonction pour gérer les changements de valeur
+  const changeValue = async (newValue) => {
+    // Appeler la fonction onChange fournie avec la nouvelle valeur
+    onChange(newValue);
+
+    // Utiliser le hook useState de manière asynchrone pour garantir la cohérence de l'état
+    await new Promise((resolve) => {
+      setValue(newValue);
+      resolve();
+    });
+
+    // Utiliser act(...) pour encapsuler le code qui déclenche les mises à jour d'état
+    await act(async () => {
+      setCollapsed(newValue);
+    });
   };
+
   return (
     <div className={`SelectContainer ${type}`} data-testid="select-testid">
       {label && <div className="label">{label}</div>}
@@ -88,7 +101,7 @@ Select.propTypes = {
   titleEmpty: PropTypes.bool,
   label: PropTypes.string,
   type: PropTypes.string,
-}
+};
 
 Select.defaultProps = {
   onChange: () => null,
@@ -96,6 +109,6 @@ Select.defaultProps = {
   label: "",
   type: "normal",
   name: "select",
-}
+};
 
 export default Select;
