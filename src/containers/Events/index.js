@@ -11,27 +11,24 @@ const PER_PAGE = 9;
 
 const EventList = () => {
   const { data, error } = useData();
-  const [type, setType] = useState();
+  const [type, setType] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const filteredEvents = (
-    (!type
-      ? data?.events
-      : data?.events) || []
-  ).filter((event, index) => {
-    const isSameType = type === event.type;  
-    const pagination = (currentPage - 1) * PER_PAGE <= index && PER_PAGE * currentPage > index;
-    if (pagination) { 
-      if (type === null) {
+
+  const allEvents = data?.events || [];
+
+  const filteredEvents = allEvents.filter((event, index) => {
+    const pagination =
+      (currentPage - 1) * PER_PAGE <= index && PER_PAGE * currentPage > index;
+
+    if (pagination) {
+      if (type === null || type === event.type) {
         return true;
-      }
-      if (isSameType) { 
-        return true; 
       }
       return false;
     }
     return false;
-  });
-  const changeType = (evtType) => {
+  }); 
+    const changeType = (evtType) => {
     setCurrentPage(1);
     setType(evtType);
   };

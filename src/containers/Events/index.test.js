@@ -21,7 +21,6 @@ const data = {
         "1 site web dédié",
       ],
     },
-
     {
       id: 2,
       type: "forum",
@@ -47,7 +46,8 @@ describe("When Events is created", () => {
     );
     await screen.findByText("avril");
   });
-  describe("and an error occured", () => {
+
+  describe("and an error occurred", () => {
     it("an error message is displayed", async () => {
       api.loadData = jest.fn().mockRejectedValue();
       render(
@@ -55,11 +55,12 @@ describe("When Events is created", () => {
           <Events />
         </DataProvider>
       );
-      expect(await screen.findByText("An error occured")).toBeInTheDocument();
+      expect(await screen.findByText("An error occurred")).toBeInTheDocument();
     });
   });
+
   describe("and we select a category", () => {
-    it.only("an filtered list is displayed", async () => {
+    it("a filtered list is displayed", async () => {
       api.loadData = jest.fn().mockReturnValue(data);
       render(
         <DataProvider>
@@ -67,22 +68,15 @@ describe("When Events is created", () => {
         </DataProvider>
       );
       await screen.findByText("Forum #productCON");
-      fireEvent(
-        await screen.findByTestId("collapse-button-testid"),
-        new MouseEvent("click", {
-          cancelable: true,
-          bubbles: true,
-        })
-      );
-      fireEvent(
-        (await screen.findAllByText("soirée entreprise"))[0],
-        new MouseEvent("click", {
-          cancelable: true,
-          bubbles: true,
-        })
-      );
 
+      // On sélectionne la catégorie "soirée entreprise"
+      fireEvent.click(screen.getByTestId("collapse-button-testid"));
+      fireEvent.click(await screen.findByText("soirée entreprise"));
+
+      // On attend que la carte "Conférence #productCON" soit présente
       await screen.findByText("Conférence #productCON");
+
+      // On s'assure que la carte "Forum #productCON" n'est pas présente
       expect(screen.queryByText("Forum #productCON")).not.toBeInTheDocument();
     });
   });
@@ -96,14 +90,10 @@ describe("When Events is created", () => {
         </DataProvider>
       );
 
-      fireEvent(
-        await screen.findByText("Conférence #productCON"),
-        new MouseEvent("click", {
-          cancelable: true,
-          bubbles: true,
-        })
-      );
+      // On clique sur la carte "Conférence #productCON"
+      fireEvent.click(await screen.findByText("Conférence #productCON"));
 
+      // On attend que les détails de l'événement soient présents
       await screen.findByText("24-25-26 Février");
       await screen.findByText("1 site web dédié");
     });
