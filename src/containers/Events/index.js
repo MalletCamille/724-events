@@ -16,27 +16,21 @@ const EventList = () => {
 
   const allEvents = data?.events || [];
 
-  const filteredEvents = allEvents.filter((event, index) => {
-    const pagination =
-      (currentPage - 1) * PER_PAGE <= index && PER_PAGE * currentPage > index;
+  const filteredEvents = allEvents
+    .filter((event) => type === null || type === event.type)
+    .slice((currentPage - 1) * PER_PAGE, PER_PAGE * currentPage);
 
-    if (pagination) {
-      if (type === null || type === event.type) {
-        return true;
-      }
-      return false;
-    }
-    return false;
-  }); 
-    const changeType = (evtType) => {
+  const changeType = (evtType) => {
     setCurrentPage(1);
     setType(evtType);
   };
-  const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
+
+  const pageNumber = Math.floor((allEvents.length || 0) / PER_PAGE) + 1;
   const typeList = new Set(data?.events.map((event) => event.type));
+
   return (
     <>
-      {error && <div>An error occured</div>}
+      {error && <div>An error occurred</div>}
       {data === null ? (
         "loading"
       ) : (
