@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { useState, act } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 
 import "./style.scss";
@@ -16,22 +16,17 @@ const Select = ({
   const [value, setValue] = useState();
   const [collapsed, setCollapsed] = useState(true);
 
-  // Fonction pour gérer les changements de valeur
-  const changeValue = async (newValue) => {
+  const changeValue = (newValue) => {
     // Appeler la fonction onChange fournie avec la nouvelle valeur
     onChange(newValue);
-
-    // Utiliser le hook useState de manière asynchrone pour garantir la cohérence de l'état
-    await new Promise((resolve) => {
-      setValue(newValue);
-      resolve();
-    });
-
-    // Utiliser act(...) pour encapsuler le code qui déclenche les mises à jour d'état
-    await act(async () => {
-      setCollapsed(newValue);
-    });
+  
+    // Mettre à jour de manière synchrone le hook useState
+    setValue(newValue);
+  
+    // Mettre à jour de manière synchrone l'état de collapsed
+    setCollapsed(true); // Pour fermer la liste déroulante une fois une catégorie cliquée 
   };
+  
 
   return (
     <div className={`SelectContainer ${type}`} data-testid="select-testid">

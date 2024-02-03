@@ -1,8 +1,8 @@
+import { useState, useEffect } from "react";
 import Menu from "../../containers/Menu";
 import ServiceCard from "../../components/ServiceCard";
 import EventCard from "../../components/EventCard";
 import PeopleCard from "../../components/PeopleCard";
-
 import "./style.scss";
 import EventList from "../../containers/Events";
 import Slider from "../../containers/Slider";
@@ -13,8 +13,22 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const { last } = useData();
-  
+  const { data } = useData();
+  const [last, setLast] = useState(null);
+
+  useEffect(() => {
+    const findLatestEvent = () => {
+      if (data?.events) {
+        const sortedEvents = data.events.toSorted((evtA, evtB) =>
+          new Date(evtB.date) - new Date(evtA.date)
+          );
+          setLast(sortedEvents[0]);
+      }
+    };
+
+    findLatestEvent();
+  }, [data]);
+
   return (
     <>
       <header>
@@ -118,13 +132,17 @@ const Page = () => {
       <footer className="row">
         <div className="col presta">
           <h3>Notre dernière prestation</h3>
-          <EventCard
-            imageSrc={last?.cover}
-            title={last?.title}
-            date={new Date(last?.date)}
-            small
-            label="boom"
-          />
+          {last ? (
+            <EventCard
+              imageSrc={last.cover}
+              title={last.title}
+              date={new Date(last.date)}
+              small
+              label="boom"
+            />
+          ) : (
+            <p>Chargement des données...</p>
+          )}
         </div>
         <div className="col contact">
           <h3>Contactez-nous</h3>
