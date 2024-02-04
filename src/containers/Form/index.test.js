@@ -14,17 +14,15 @@ describe("When Events is created", () => {
     it("the success action is called", async () => {
       const onSuccess = jest.fn();
       render(<Form onSuccess={onSuccess} />);
-      
-      // On clique sur le bouton
-      fireEvent.click(await screen.findByTestId("button-test-id"));
-
-      // Pour vérifiezr que le texte "En cours" est présent (indiquant le chargement)
+      fireEvent(
+        await screen.findByTestId("button-test-id"),
+        new MouseEvent("click", {
+          cancelable: true,
+          bubbles: true,
+        })
+      );
       await screen.findByText("En cours");
-
-      // Pour vérifier que le texte "Envoyer" n'est plus présent
-      expect(screen.queryByText("Envoyer")).not.toBeInTheDocument();
-
-      // Pour vérifier que la fonction onSuccess a été appelée
+      await screen.findByText("Envoyer");
       expect(onSuccess).toHaveBeenCalled();
     });
   });
