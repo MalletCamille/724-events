@@ -25,8 +25,16 @@ const EventList = () => {
     setType(evtType);
   };
 
-  const pageNumber = Math.floor((allEvents.length || 0) / PER_PAGE) + 1;
+  // const pageNumber = Math.floor((allEvents.length || 0) / PER_PAGE) + 1;
+
+ // const pageNumber = Math.ceil(filteredEvents.length / PER_PAGE);
+
+
   const typeList = new Set(data?.events.map((event) => event.type));
+
+  const totalFilteredEvents = allEvents.filter((event) => type === null || type === event.type);
+  const pageNumber = Math.ceil(totalFilteredEvents.length / PER_PAGE);
+
 
   return (
     <>
